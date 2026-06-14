@@ -1,28 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bluetooth Printer Test</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f4f6f9;
+}
+
+.card{
+    width:90%;
+    max-width:400px;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+    text-align:center;
+}
+
+h1{
+    margin-bottom:10px;
+}
+
+p{
+    color:#666;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.connect{
+    background:#2563eb;
+    color:white;
+}
+
+.connect:hover{
+    transform:translateY(-2px);
+}
+
+.status{
+    margin-top:20px;
+    padding:12px;
+    border-radius:10px;
+    background:#f1f5f9;
+    word-break:break-word;
+}
+</style>
+
 </head>
 <body>
 
-<button onclick="connectPrinter()">Connect Printer</button>
+<div class="card">
+    <h1>🖨️ Printer Bluetooth</h1>
+    <p>Hubungkan printer thermal POS58</p>
+
+    <button class="connect" onclick="connectPrinter()">
+        Connect Printer
+    </button>
+
+    <div class="status" id="status">
+        Belum terhubung
+    </div>
+</div>
 
 <script>
 async function connectPrinter() {
-  try {
-    const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: []
-    });
+    const status = document.getElementById("status");
 
-    alert("Terhubung ke: " + device.name);
-    console.log(device);
+    try {
+        status.innerHTML = "Mencari printer...";
 
-  } catch (err) {
-    console.error(err);
-    alert("Gagal: " + err.message);
-  }
+        const device = await navigator.bluetooth.requestDevice({
+            acceptAllDevices: true
+        });
+
+        status.innerHTML =
+            "✅ Terhubung:<br><b>" +
+            (device.name || "Unknown Device") +
+            "</b>";
+
+        console.log(device);
+
+    } catch(err) {
+        status.innerHTML =
+            "❌ Gagal:<br>" + err.message;
+
+        console.error(err);
+    }
 }
 </script>
 
